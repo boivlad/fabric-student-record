@@ -1,0 +1,72 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Student Record</title>
+    <link rel="stylesheet" href="../styles/styles.css">
+</head>
+
+<body>
+    <div class="centered-container">
+        <div class='registration'>
+            <form method="POST" action="/api/v1/teacher">
+                <h4 class="form-header">Teacher registration</h4>
+                <div class="form-item-block">
+                    <div class="form-item">
+                        <label for="login">Login</label>
+                    </div>
+                    <div class="form-item">
+                        <input type="text" name="login" required />
+                    </div>
+                </div>
+                <div class="form-item-block">
+                    <div class="form-item">
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="form-item">
+                        <input type="password" name="password" required />
+                    </div>
+                </div>
+                <div class="form-item-block">
+                    <div class="form-item">
+                        <div class="error"></div>
+                    </div>
+                    <div class="form-item">
+                        <button type="submit">Sign up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const error = document.querySelector('.error');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            error.textContent = '';
+            const loginValue = form.login.value;
+            const passwordValue = form.password.value;
+            try {
+                const res = await fetch('/api/v1/teacher', {
+                    method: 'POST',
+                    body: JSON.stringify({ loginValue, passwordValue }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.message) {
+                    error.textContent = data.message;
+                }
+                if (data.certificate) {
+                    location.assign('/api/v1');
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
+    </script>
+</body>
+
+</html>

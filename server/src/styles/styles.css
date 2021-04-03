@@ -1,0 +1,73 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-align: center;
+  margin: 0;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+form {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-header {
+  margin: 8px 0;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid lightgray;
+  cursor: pointer;
+}
+
+input:focus {
+  outline: none;
+}
+
+button {
+  border: none;
+  border-radius: 6px;
+  outline: none;
+  background-color: rgb(236, 235, 235);
+  cursor: pointer;
+  padding: 8px;
+}
+
+button:hover {
+  background-color: lightgray;
+}
+
+.centered-container {
+  height: 100%;
+  display: flex;
+}
+
+.registration {
+  max-width: 250px;
+  padding: 16px;
+  border: 1px solid gray;
+  border-radius: 6px;
+  margin: auto;
+}
+
+.form-item-block {
+  display: flex;
+  padding: 8px;
+}
+
+.form-item {
+  flex: 1;
+  text-align: center;
+}
+
+.form-item:first-child {
+  margin-right: 8px;
+}
