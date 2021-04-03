@@ -24,9 +24,9 @@
     "express": "^4.17.1",
     "fabric-ca-client": "^1.4.8",
     "fabric-client": "^1.4.5",
-    "fabric-network": "^1.4.5"
+    "fabric-network": "^1.4.5",
+    "node": "^12.15.0"
   },
-
   "devDependencies": {
     "@babel/core": "^7.13.13",
     "@babel/node": "^7.13.13",
