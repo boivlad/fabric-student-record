@@ -1,5 +1,5 @@
-const { StudentRecordsStorageContract } = require('./contracts');
+const { KeyValueStorageContract } = require('./contracts');
 
 module.exports.contracts = [
-  StudentRecordsStorageContract,
+  KeyValueStorageContract,
 ];
