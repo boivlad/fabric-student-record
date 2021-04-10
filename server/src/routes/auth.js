@@ -1,13 +1,12 @@
-import express from 'express';
 
+import express from 'express';
+import { X509WalletMixin } from 'fabric-network';
+import {Gateway, getCA,InMemoryWallet, getConnectedWallet, registerUser } from '../utils';
+import express from 'express';
 import FabricCAServices from 'fabric-ca-client';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
-import {Gateway, InMemoryWallet, X509WalletMixin} from 'fabric-network';
-
-import { getCA, getConnectedWallet, registerUser } from '../utils';
-
 
 const router = express.Router();
 
@@ -44,6 +43,7 @@ const studentRegistration = async (req, res) => {
   }
 
 };
+
 var wallet;
 var identity;
 const teacherRegistration = async (req, res) => {
@@ -69,7 +69,6 @@ const teacherRegistration = async (req, res) => {
     res.status(500).send('Preenrolment error ' + err);
     return;
   }
-
   const gateway = new Gateway();
   const connectionProfile = yaml.safeLoad(
       fs.readFileSync(__dirname + '/../gateway/networkConnection.yaml', 'utf8')
