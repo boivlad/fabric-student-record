@@ -1,9 +1,13 @@
 import express from 'express';
+
 import FabricCAServices from 'fabric-ca-client';
 import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import {Gateway, InMemoryWallet, X509WalletMixin} from 'fabric-network';
+
+import { getCA, getConnectedWallet, registerUser } from '../utils';
+
 
 const router = express.Router();
 
@@ -11,6 +15,34 @@ const studentRegistration = async (req, res) => {
   var caInfo = yaml.safeLoad(fs.readFileSync('../gateway/fabric-ca-client-config.yaml', 'utf8'));
   const caTLSCACerts = caInfo.tlsCACerts.pem;
   const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
+  const { login, password } = req.body;
+  try {
+    const ca = getCA();
+    const adminData = await ca.enroll({ enrollmentID: 'admin', enrollmentSecret: 'password' });
+    const mixin = X509WalletMixin.createIdentity(
+      'Org1MSP',
+      adminData.certificate,
+      adminData.key.toBytes()
+    );
+    const gateway = await getConnectedWallet('Org1MSP', mixin);
+    const admin = await gateway.getCurrentIdentity()
+    await registerUser(ca, admin, { login, password, affiliation: 'teacher' });
+
+    const userData = await ca.enroll({
+      enrollmentID: login,
+      enrollmentSecret: password,
+    });
+    gateway.disconnect();
+    res.status(201).json({
+      login,
+      certificate: userData.certificate,
+      privateKey: userData.key.toBytes(),
+    });
+  }
+  catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+
 };
 var wallet;
 var identity;
