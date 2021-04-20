@@ -1,13 +1,16 @@
 import express from 'express';
 import FabricCAServices from 'fabric-ca-client';
 import fs from 'fs';
-import path from 'path';
 import yaml from 'js-yaml';
 
 const router = express.Router();
-const teacherRegistration = async (req, res) => {
-  const {login, password} = req.body;
-
+const registration = async ({login, password}, user) => {
+   if(!login || !password) {
+    return {
+      status: 401, 
+      result: "No login or password"
+    };
+  }
   const ca = new FabricCAServices('http://0.0.0.0:7054');
 
   let adminData;
@@ -62,7 +65,7 @@ const teacherRegistration = async (req, res) => {
       enrollmentID: login,
       enrollmentSecret: password,
       role: 'peer',
-      affiliation: 'naukma.teacher',
+      affiliation: `naukma.${user}`,
       maxEnrollments: -1
     }, admin);
   } catch (registerErr) {
@@ -71,8 +74,9 @@ const teacherRegistration = async (req, res) => {
   }
 
 
+  const userData;
   try {
-   const userData = await ca.enroll({enrollmentID: login, enrollmentSecret: password});
+   userData = await ca.enroll({enrollmentID: login, enrollmentSecret: password});
   } catch (enrollmentErr) {
     res.status(400).json({ message: 'Error while enrolling admin', error: err.message });
   }
@@ -86,6 +90,14 @@ const teacherRegistration = async (req, res) => {
 
 };
 
-router.post('/teacher', teacherRegistration);
+router.post('/student', async (req, res) => {
+  const response = await registration(req.body, 'student');
+  res.status(response.status).json(response.result);
+});
+
+router.post('/teacher', async (req, res) => {
+  const response = await registration(req.body, 'teacher');
+  res.status(response.status).json(response.result);
+});
 
 export default router;
