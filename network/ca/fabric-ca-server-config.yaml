@@ -132,7 +132,7 @@ registry:
     - name: admin
       pass: password
       type: client
-      affiliation: "naukma.teacher"
+      affiliation: ""
       attrs:
         hf.Registrar.Roles: "*"
         hf.Registrar.DelegateRoles: "*"
@@ -153,8 +153,8 @@ registry:
 #  or "mysql".
 #############################################################################
 db:
-  type: postgres
-  datasource: host=db port=5432 user=postgres password= dbname=fabric_ca sslmode=disable
+  type: sqlite3
+  datasource: fabric-ca-server.db
   tls:
     enabled: false
     certfiles:
@@ -243,7 +243,7 @@ ldap:
 # which are always stored in lower case.
 #############################################################################
 affiliations:
-  naukma:
+  org1:
     - teacher
     - student
 
@@ -305,7 +305,7 @@ signing:
 #     CA certificates though it can still issue end entity certificates.
 ###########################################################################
 csr:
-  cn: ca.fabric.naukma
+  cn: ca.org1.example.com
   keyrequest:
     algo: ecdsa
     size: 256
@@ -313,10 +313,10 @@ csr:
     - C: UA
       ST: "Kiev region"
       L: Kiev
-      O: naukma
-      OU: teacher
+      O: org1.example.com
+      OU:
   hosts:
-    - ca.fabric.naukma
+    - org1.example.com
     - localhost
   ca:
     expiry: 131400h
